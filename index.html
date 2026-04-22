@@ -1,1 +1,855 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edoardo Crema — Controlling per PMI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* ── VERDE BOSCO BCG ── */
+  --ink:          #0D1F17;          /* verde-nero profondo — testo primario */
+  --paper:        #F2F5F0;          /* bianco caldo con cast verde */
+  --cream:        #F8FAF7;          /* superficie più chiara */
+  --accent:       #1F6B3E;          /* verde BCG core */
+  --accent-deep:  #154D2C;          /* verde più scuro per hover */
+  --accent-light: #D6EAD9;          /* tint verde pastello per badge/tag */
+  --mid:          #4A5E52;          /* verde-grigio per testo secondario */
+  --rule:         #C8D9CC;          /* bordo verde-grigio chiaro */
+}
 
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 20px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(242,245,240,0.93);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.nav-logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a {
+  font-size: 13px; font-weight: 500; color: var(--mid);
+  text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-cta {
+  background: var(--ink); color: var(--cream) !important;
+  padding: 10px 22px; border-radius: 2px;
+  font-size: 12px !important;
+}
+.nav-cta:hover { background: var(--accent) !important; color: white !important; }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: grid; grid-template-columns: 1fr 1fr;
+  padding-top: 80px;
+}
+.hero-left {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 80px 60px 80px 80px;
+  border-right: 1px solid var(--rule);
+}
+.hero-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 10px;
+}
+.hero-eyebrow::before {
+  content: ''; display: block;
+  width: 32px; height: 1px; background: var(--accent);
+}
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(38px, 4.5vw, 62px);
+  font-weight: 900; line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin-bottom: 28px;
+}
+.hero-title em {
+  font-style: italic; color: var(--accent);
+}
+.hero-body {
+  font-size: 17px; color: var(--mid);
+  line-height: 1.7; max-width: 460px;
+  margin-bottom: 40px;
+}
+.hero-body strong { color: var(--ink); font-weight: 600; }
+.hero-actions { display: flex; gap: 16px; align-items: center; }
+.btn-primary {
+  background: var(--accent); color: white;
+  padding: 16px 32px; border-radius: 2px;
+  font-size: 14px; font-weight: 600;
+  text-decoration: none; letter-spacing: 0.04em;
+  transition: background 0.2s, transform 0.15s;
+  display: inline-block;
+}
+.btn-primary:hover { background: var(--accent-deep); transform: translateY(-1px); }
+.btn-ghost {
+  color: var(--ink); font-size: 14px; font-weight: 500;
+  text-decoration: none; border-bottom: 1px solid var(--ink);
+  padding-bottom: 2px; letter-spacing: 0.03em;
+  transition: color 0.2s, border-color 0.2s;
+}
+.btn-ghost:hover { color: var(--accent); border-color: var(--accent); }
+
+.hero-right {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 80px 80px 80px 60px;
+  background: var(--paper);
+  position: relative;
+}
+.hero-right::before {
+  content: '"';
+  position: absolute; top: 60px; left: 50px;
+  font-family: 'Playfair Display', serif;
+  font-size: 160px; color: var(--rule);
+  line-height: 1; pointer-events: none;
+}
+.stat-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--rule); border: 1px solid var(--rule);
+  margin-bottom: 40px;
+}
+.stat-box {
+  background: var(--paper);
+  padding: 28px 24px;
+  transition: background 0.2s;
+}
+.stat-box:hover { background: var(--accent-light); }
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 46px; font-weight: 900;
+  color: var(--accent); line-height: 1;
+  margin-bottom: 8px;
+}
+.stat-label {
+  font-size: 12px; font-weight: 500; color: var(--mid);
+  letter-spacing: 0.05em; text-transform: uppercase;
+  line-height: 1.4;
+}
+.hero-quote {
+  font-family: 'Playfair Display', serif;
+  font-size: 19px; font-style: italic;
+  color: var(--ink); line-height: 1.6;
+  position: relative; z-index: 1;
+}
+.hero-quote-author {
+  margin-top: 12px;
+  font-size: 12px; font-weight: 600; color: var(--mid);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+
+/* DIVIDER */
+.section-divider {
+  border: none; border-top: 1px solid var(--rule);
+  margin: 0;
+}
+
+/* IL PROBLEMA */
+.problem {
+  padding: 100px 80px;
+  display: grid; grid-template-columns: 340px 1fr; gap: 80px;
+  align-items: start;
+}
+.section-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3vw, 42px);
+  font-weight: 700; line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.problem-text {
+  font-size: 17px; color: var(--mid); line-height: 1.75;
+  margin-bottom: 28px;
+}
+.problem-text strong { color: var(--ink); font-weight: 600; }
+
+.pain-list {
+  list-style: none; margin-top: 32px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.pain-item {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 20px 24px;
+  background: var(--paper); border: 1px solid var(--rule);
+  border-radius: 2px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.pain-item:hover { border-color: var(--accent); background: var(--accent-light); }
+.pain-icon {
+  font-size: 20px; flex-shrink: 0; margin-top: 1px;
+}
+.pain-text { font-size: 15px; color: var(--ink); line-height: 1.5; }
+.pain-text strong { font-weight: 600; display: block; margin-bottom: 3px; }
+.pain-sub { color: var(--mid); font-size: 14px; }
+
+/* SERVIZI — sfondo verde scuro istituzionale */
+.services {
+  background: var(--ink); color: var(--cream);
+  padding: 100px 80px;
+}
+.services-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 64px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 40px;
+}
+.services-header .section-label { color: #7EC89A; }
+.services-header .section-title { color: var(--cream); max-width: 500px; }
+.services-count {
+  font-family: 'Playfair Display', serif;
+  font-size: 72px; font-weight: 900; color: rgba(255,255,255,0.06);
+  line-height: 1;
+}
+
+.service-list { display: flex; flex-direction: column; gap: 0; }
+.service-item {
+  display: grid; grid-template-columns: 80px 1fr auto;
+  align-items: center; gap: 40px;
+  padding: 36px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  cursor: default;
+  transition: all 0.2s;
+}
+.service-item:hover { padding-left: 16px; }
+.service-item:hover .service-num { color: #7EC89A; }
+.service-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.2);
+  letter-spacing: 0.1em;
+  transition: color 0.2s;
+}
+.service-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px; font-weight: 700;
+  color: var(--cream); margin-bottom: 8px;
+}
+.service-desc {
+  font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.6;
+  max-width: 560px;
+}
+.service-tags {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;
+}
+.tag {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.35);
+  border-radius: 2px;
+}
+.service-arrow {
+  font-size: 20px; color: rgba(255,255,255,0.15);
+  transition: color 0.2s, transform 0.2s;
+}
+.service-item:hover .service-arrow { color: #7EC89A; transform: translateX(4px); }
+
+/* COME LAVORO */
+.process {
+  padding: 100px 80px;
+  background: var(--paper);
+}
+.process-header { margin-bottom: 64px; }
+.process-steps {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0; border: 1px solid var(--rule);
+}
+.process-step {
+  padding: 40px 32px;
+  border-right: 1px solid var(--rule);
+  position: relative;
+  transition: background 0.2s;
+}
+.process-step:hover { background: var(--accent-light); }
+.process-step:last-child { border-right: none; }
+.step-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 56px; font-weight: 900;
+  color: var(--rule); line-height: 1;
+  margin-bottom: 20px;
+  transition: color 0.2s;
+}
+.process-step:hover .step-number { color: var(--accent); opacity: 0.3; }
+.step-title {
+  font-size: 16px; font-weight: 700;
+  margin-bottom: 10px; color: var(--ink);
+}
+.step-desc {
+  font-size: 13px; color: var(--mid); line-height: 1.6;
+}
+.step-arrow {
+  position: absolute; right: -13px; top: 50%;
+  transform: translateY(-50%);
+  width: 24px; height: 24px;
+  background: var(--cream); border: 1px solid var(--rule);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--accent);
+  z-index: 1;
+}
+.process-step:last-child .step-arrow { display: none; }
+
+/* CASO STUDIO */
+.case-study {
+  padding: 100px 80px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+  align-items: center;
+}
+.case-tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--accent-light); color: var(--accent);
+  padding: 6px 14px; border-radius: 2px;
+  margin-bottom: 20px;
+}
+.case-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px; font-weight: 700; line-height: 1.2;
+  margin-bottom: 20px;
+}
+.case-body {
+  font-size: 15px; color: var(--mid); line-height: 1.75;
+  margin-bottom: 32px;
+}
+.case-results {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--rule); border: 1px solid var(--rule);
+}
+.result-box {
+  background: var(--cream); padding: 24px 20px;
+  transition: background 0.2s;
+}
+.result-box:hover { background: var(--accent-light); }
+.result-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px; font-weight: 900; color: var(--accent);
+  line-height: 1; margin-bottom: 6px;
+}
+.result-label {
+  font-size: 12px; color: var(--mid);
+  letter-spacing: 0.04em; line-height: 1.4;
+}
+.case-right {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 48px 40px;
+}
+.case-story-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--mid);
+  margin-bottom: 20px;
+}
+.case-story-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-style: italic; line-height: 1.6;
+  color: var(--ink);
+}
+.case-story-steps {
+  margin-top: 32px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.story-step {
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.story-dot {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent); color: white;
+  font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.story-text { font-size: 14px; color: var(--mid); line-height: 1.5; }
+.story-text strong { color: var(--ink); font-weight: 600; }
+
+/* CHI SONO — verde scuro istituzionale */
+.about {
+  background: var(--ink); color: var(--cream);
+  padding: 100px 80px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 100px;
+  align-items: center;
+}
+.about-label { color: #7EC89A !important; }
+.about-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 40px; font-weight: 700; line-height: 1.2;
+  color: var(--cream); margin-bottom: 24px;
+}
+.about-body {
+  font-size: 16px; line-height: 1.75;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 32px;
+}
+.about-body strong { color: var(--cream); font-weight: 600; }
+.credentials {
+  display: flex; flex-direction: column; gap: 12px;
+}
+.credential {
+  display: flex; gap: 14px; align-items: center;
+  font-size: 14px; color: rgba(255,255,255,0.5);
+}
+.credential-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #7EC89A; flex-shrink: 0;
+}
+.skill-group { margin-bottom: 32px; }
+.skill-group-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(255,255,255,0.25);
+  margin-bottom: 14px;
+}
+.skill-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.skill-chip {
+  font-size: 13px; font-weight: 500;
+  padding: 8px 16px;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.6);
+  border-radius: 2px;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.skill-chip:hover { border-color: #7EC89A; color: var(--cream); background: rgba(126,200,154,0.08); }
+
+/* CTA */
+.cta-section {
+  padding: 120px 80px;
+  text-align: center;
+  background: var(--paper);
+  border-top: 1px solid var(--rule);
+}
+.cta-label { color: var(--accent); margin-bottom: 20px; }
+.cta-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 4vw, 56px); font-weight: 900;
+  line-height: 1.1; letter-spacing: -0.02em;
+  max-width: 700px; margin: 0 auto 20px;
+}
+.cta-sub {
+  font-size: 17px; color: var(--mid);
+  max-width: 480px; margin: 0 auto 48px;
+  line-height: 1.6;
+}
+.cta-actions { display: flex; gap: 16px; justify-content: center; align-items: center; }
+.cta-secondary {
+  font-size: 14px; color: var(--mid);
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* FOOTER */
+footer {
+  background: var(--ink); color: rgba(255,255,255,0.35);
+  padding: 40px 80px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px;
+}
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px; font-weight: 700; color: var(--cream);
+}
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { color: rgba(255,255,255,0.35); text-decoration: none; font-size: 12px; transition: color 0.2s; }
+.footer-links a:hover { color: #7EC89A; }
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-eyebrow { animation: fadeUp 0.6s 0.1s both; }
+.hero-title    { animation: fadeUp 0.6s 0.2s both; }
+.hero-body     { animation: fadeUp 0.6s 0.3s both; }
+.hero-actions  { animation: fadeUp 0.6s 0.4s both; }
+.stat-grid     { animation: fadeUp 0.6s 0.3s both; }
+.hero-quote    { animation: fadeUp 0.6s 0.5s both; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .hero { grid-template-columns: 1fr; }
+  .hero-left { padding: 60px 24px 40px; border-right: none; border-bottom: 1px solid var(--rule); }
+  .hero-right { padding: 40px 24px 60px; }
+  .problem { grid-template-columns: 1fr; padding: 60px 24px; gap: 40px; }
+  .services { padding: 60px 24px; }
+  .services-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .service-item { grid-template-columns: 50px 1fr; }
+  .service-arrow { display: none; }
+  .process { padding: 60px 24px; }
+  .process-steps { grid-template-columns: 1fr 1fr; }
+  .process-step:nth-child(2) { border-right: none; }
+  .process-step:nth-child(3) { border-top: 1px solid var(--rule); }
+  .process-step:nth-child(4) { border-top: 1px solid var(--rule); border-right: none; }
+  .case-study { grid-template-columns: 1fr; padding: 60px 24px; gap: 40px; }
+  .about { grid-template-columns: 1fr; padding: 60px 24px; gap: 40px; }
+  .cta-section { padding: 80px 24px; }
+  footer { padding: 32px 24px; flex-direction: column; gap: 20px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Edoardo <span>Crema</span></div>
+  <ul class="nav-links">
+    <li><a href="#servizi">Servizi</a></li>
+    <li><a href="#processo">Come lavoro</a></li>
+    <li><a href="#caso">Caso reale</a></li>
+    <li><a href="#chi-sono">Chi sono</a></li>
+    <li><a href="#contatto" class="nav-cta">Parliamone</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Consulente · Controlling · PMI Italiane</div>
+    <h1 class="hero-title">
+      Costruisco il Controllo di Gestione<br>
+      di cui la tua Azienda<br>
+      <em>ha bisogno.</em>
+    </h1>
+    <p class="hero-body">
+      Per le PMI italiane che vogliono finalmente capire i propri numeri.<br>
+      <strong>Dalla prima nota al conto economico per commessa</strong> — senza aspettare mesi o assumere un CFO.
+    </p>
+    <div class="hero-actions">
+      <a href="#contatto" class="btn-primary">Parliamo del tuo caso →</a>
+      <a href="#servizi" class="btn-ghost">Scopri i servizi</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="stat-num">−14%</div>
+        <div class="stat-label">Riduzione FTE dimostrata<br>via modello operativo</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">−10%</div>
+        <div class="stat-label">Monte ore settimanale<br>su reportistica manuale</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">4+</div>
+        <div class="stat-label">Anni in contesti<br>industriali multinazionali</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">0→1</div>
+        <div class="stat-label">Sistemi P&L costruiti<br>da zero, oggi in produzione</div>
+      </div>
+    </div>
+    <p class="hero-quote">
+      "La maggior parte delle PMI ha i dati. Il problema è che nessuno li trasforma in decisioni."
+    </p>
+    <p class="hero-quote-author">— Edoardo Crema</p>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- IL PROBLEMA -->
+<section class="problem">
+  <div>
+    <div class="section-label">Il problema</div>
+    <h2 class="section-title">Riconosci questa situazione?</h2>
+  </div>
+  <div>
+    <p class="problem-text">
+      La maggior parte delle PMI italiane con 5–50 dipendenti <strong>non ha un controllo di gestione strutturato</strong>. I dati ci sono — nei gestionali, in Excel, nelle teste delle persone — ma non si trasformano mai in risposte chiare.
+    </p>
+    <p class="problem-text">
+      Il risultato? Decisioni prese a istinto, margini opachi, costi nascosti.
+    </p>
+    <ul class="pain-list">
+      <li class="pain-item">
+        <span class="pain-icon">📊</span>
+        <div class="pain-text">
+          <strong>Non sai quali commesse guadagnano davvero</strong>
+          <span class="pain-sub">Il fatturato c'è, ma i margini per progetto sono un mistero.</span>
+        </div>
+      </li>
+      <li class="pain-item">
+        <span class="pain-icon">📅</span>
+        <div class="pain-text">
+          <strong>Il report arriva troppo tardi</strong>
+          <span class="pain-sub">Quando capisci cosa è andato storto, è già troppo tardi per intervenire.</span>
+        </div>
+      </li>
+      <li class="pain-item">
+        <span class="pain-icon">🔁</span>
+        <div class="pain-text">
+          <strong>Ore sprecate su Excel</strong>
+          <span class="pain-sub">Ogni mese qualcuno passa giorni a consolidare dati a mano.</span>
+        </div>
+      </li>
+      <li class="pain-item">
+        <span class="pain-icon">❓</span>
+        <div class="pain-text">
+          <strong>Nessun numero su cui fare leva</strong>
+          <span class="pain-sub">Vuoi crescere, ma non hai i KPI giusti per decidere dove investire.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- SERVIZI -->
+<section class="services" id="servizi">
+  <div class="services-header">
+    <div>
+      <div class="section-label">Cosa faccio</div>
+      <h2 class="section-title" style="color:var(--cream)">Tre aree di intervento.<br>Un obiettivo solo.</h2>
+    </div>
+    <div class="services-count">03</div>
+  </div>
+  <div class="service-list">
+    <div class="service-item">
+      <div class="service-num">01</div>
+      <div class="service-content">
+        <div class="service-name">Controlling da Zero</div>
+        <div class="service-desc">Costruisco la funzione di controllo di gestione dove non esiste. Piano dei conti, centri di costo, P&L per commessa, budget e analisi degli scostamenti. Dal foglio bianco al sistema operativo — in poche settimane, non in anni.</div>
+        <div class="service-tags">
+          <span class="tag">P&L per commessa</span>
+          <span class="tag">Budget</span>
+          <span class="tag">Analisi scostamenti</span>
+          <span class="tag">Centri di costo</span>
+        </div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">02</div>
+      <div class="service-content">
+        <div class="service-name">Dashboard & Business Intelligence</div>
+        <div class="service-desc">Trasformo i dati operativi in dashboard che la direzione riesce davvero a leggere. KPI chiari, aggiornamento automatico, zero dipendenza da chi ha costruito il file. Strumenti su misura con Power BI, Superset o Looker Studio.</div>
+        <div class="service-tags">
+          <span class="tag">Power BI</span>
+          <span class="tag">Superset</span>
+          <span class="tag">KPI Operativi</span>
+          <span class="tag">Real-time</span>
+        </div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">03</div>
+      <div class="service-content">
+        <div class="service-name">Automazione & Reportistica</div>
+        <div class="service-desc">Per chi ha già una reportistica ma perde ore ogni mese a consolidarla. Automatizza il flusso con Python: estrazione dai gestionali, elaborazione e report pronti in automatico. Meno lavoro manuale, più tempo per decidere.</div>
+        <div class="service-tags">
+          <span class="tag">Python</span>
+          <span class="tag">ETL</span>
+          <span class="tag">Report automatici</span>
+          <span class="tag">PostgreSQL</span>
+        </div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- COME LAVORO -->
+<section class="process" id="processo">
+  <div class="process-header">
+    <div class="section-label">Come lavoro</div>
+    <h2 class="section-title">Dal brief al sistema operativo<br>in quattro passi.</h2>
+  </div>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-number">01</div>
+      <div class="step-title">Diagnosi</div>
+      <div class="step-desc">Capisco dove sei oggi: dati disponibili, processi esistenti, obiettivi di business. Una call o un incontro, niente questionari infiniti.</div>
+      <div class="step-arrow">→</div>
+    </div>
+    <div class="process-step">
+      <div class="step-number">02</div>
+      <div class="step-title">Progetto</div>
+      <div class="step-desc">Definisco la soluzione più semplice che funziona. Niente overengineering — solo quello che serve davvero alla tua azienda adesso.</div>
+      <div class="step-arrow">→</div>
+    </div>
+    <div class="process-step">
+      <div class="step-number">03</div>
+      <div class="step-title">Costruzione</div>
+      <div class="step-desc">Realizzo e metto in produzione. Lavoro in autonomia, aggiorno regolarmente, nessun blocco in attesa di input.</div>
+      <div class="step-arrow">→</div>
+    </div>
+    <div class="process-step">
+      <div class="step-number">04</div>
+      <div class="step-title">Consegna</div>
+      <div class="step-desc">Il sistema rimane tuo. Ti formo perché sia autonomo. Resto disponibile per evoluzioni, ma non crei dipendenza da me.</div>
+      <div class="step-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- CASO STUDIO -->
+<section class="case-study" id="caso">
+  <div>
+    <div class="case-tag">Caso reale · Settore Edile</div>
+    <h2 class="case-title">Da zero al primo P&L per commessa — in produzione.</h2>
+    <p class="case-body">
+      Un'azienda edile con 15 dipendenti non aveva mai avuto un sistema di controllo di gestione strutturato. I margini per cantiere erano un'approssimazione. Le decisioni su nuovi progetti si prendevano senza dati.
+    </p>
+    <div class="case-results">
+      <div class="result-box">
+        <div class="result-num">1°</div>
+        <div class="result-label">Sistema P&L per commessa mai avuto prima</div>
+      </div>
+      <div class="result-box">
+        <div class="result-num">✓</div>
+        <div class="result-label">In produzione autonoma, senza dipendenza dal consulente</div>
+      </div>
+      <div class="result-box">
+        <div class="result-num">100%</div>
+        <div class="result-label">Visibilità sui margini per ogni cantiere attivo</div>
+      </div>
+      <div class="result-box">
+        <div class="result-num">0→1</div>
+        <div class="result-label">Dalla prima nota alla reportistica direzionale</div>
+      </div>
+    </div>
+  </div>
+  <div class="case-right">
+    <div class="case-story-label">Come è andata</div>
+    <p class="case-story-text">"Prima non sapevamo quali cantieri ci guadagnavamo davvero."</p>
+    <div class="case-story-steps">
+      <div class="story-step">
+        <div class="story-dot">1</div>
+        <div class="story-text"><strong>Analisi dei flussi</strong> — mappatura di entrate, uscite e centri di costo per cantiere</div>
+      </div>
+      <div class="story-step">
+        <div class="story-dot">2</div>
+        <div class="story-text"><strong>Struttura P&L</strong> — piano dei conti costruito sulla realtà operativa dell'azienda</div>
+      </div>
+      <div class="story-step">
+        <div class="story-dot">3</div>
+        <div class="story-text"><strong>Integrazione dati</strong> — connessione al gestionale esistente, nessun doppio inserimento</div>
+      </div>
+      <div class="story-step">
+        <div class="story-dot">4</div>
+        <div class="story-text"><strong>Dashboard direzionale</strong> — margini per commessa aggiornati in tempo reale</div>
+      </div>
+      <div class="story-step">
+        <div class="story-dot">5</div>
+        <div class="story-text"><strong>Formazione e passaggio</strong> — il team interno gestisce tutto in autonomia</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- CHI SONO -->
+<section class="about" id="chi-sono">
+  <div>
+    <div class="section-label about-label">Chi sono</div>
+    <h2 class="about-title">Rigore quantitativo.<br>Risultati concreti.</h2>
+    <p class="about-body">
+      Sono Edoardo Crema, Analytics Consultant con <strong>oltre 4 anni di esperienza</strong> in contesti industriali — da Mérieux NutriSciences a progetti diretti con PMI italiane.
+    </p>
+    <p class="about-body">
+      Background ibrido: <strong>Ingegneria Gestionale</strong> (in corso, Udine) e <strong>Filosofia</strong> (110L con lode, Ca' Foscari). Significa che capisco i numeri e so comunicarli a chi deve usarli.
+    </p>
+    <p class="about-body">
+      Ogni progetto lo gestisco <strong>dall'inizio alla fine</strong>, in completa autonomia. Nessun passaggio intermedio, nessun overhead. Solo lavoro fatto bene.
+    </p>
+    <div class="credentials">
+      <div class="credential"><span class="credential-dot"></span>4+ anni in Data Analytics e Controlling</div>
+      <div class="credential"><span class="credential-dot"></span>Modelli in produzione in contesti reali</div>
+      <div class="credential"><span class="credential-dot"></span>Dalla digitalizzazione alla strategia</div>
+      <div class="credential"><span class="credential-dot"></span>Treviso · Disponibile da remoto in tutta Italia</div>
+    </div>
+  </div>
+  <div class="about-right">
+    <div class="skill-group">
+      <div class="skill-group-title">Controlling & Finance</div>
+      <div class="skill-chips">
+        <span class="skill-chip">P&L per commessa</span>
+        <span class="skill-chip">Budget & Forecast</span>
+        <span class="skill-chip">Variance Analysis</span>
+        <span class="skill-chip">Cost Controlling</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Business Intelligence</div>
+      <div class="skill-chips">
+        <span class="skill-chip">Power BI</span>
+        <span class="skill-chip">Apache Superset</span>
+        <span class="skill-chip">Looker Studio</span>
+        <span class="skill-chip">Tableau</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Automazione & Dati</div>
+      <div class="skill-chips">
+        <span class="skill-chip">Python</span>
+        <span class="skill-chip">SQL</span>
+        <span class="skill-chip">PostgreSQL</span>
+        <span class="skill-chip">ETL Pipeline</span>
+        <span class="skill-chip">Google Apps Script</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Modellazione</div>
+      <div class="skill-chips">
+        <span class="skill-chip">Simulazioni Monte Carlo</span>
+        <span class="skill-chip">Forecasting</span>
+        <span class="skill-chip">Churn prediction</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contatto">
+  <div class="section-label cta-label">Inizia da qui</div>
+  <h2 class="cta-title">La tua azienda merita numeri chiari.</h2>
+  <p class="cta-sub">Una call di 30 minuti per capire dove sei e cosa ti serve davvero. Nessun impegno.</p>
+  <div class="cta-actions">
+    <a href="mailto:edoardo.crema@outlook.it" class="btn-primary">Scrivimi una mail →</a>
+    <span class="cta-secondary">
+      oppure chiamami al
+      <strong style="color:var(--ink); margin-left:4px;">+39 338 860 1102</strong>
+    </span>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Edoardo Crema</div>
+  <div style="font-size:12px;">© 2025 · Treviso, Italia</div>
+  <div class="footer-links">
+    <a href="https://github.com/edoardo2496">GitHub</a>
+    <a href="https://edoardocrema.it">Website</a>
+    <a href="mailto:edoardo.crema@outlook.it">Email</a>
+  </div>
+</footer>
+
+</body>
+</html>
